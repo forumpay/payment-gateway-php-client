@@ -1,0 +1,149 @@
+<?php
+
+declare(strict_types=1);
+
+namespace ForumPay\PaymentGateway\PHPClient\Http;
+
+use ForumPay\PaymentGateway\PHPClient\Http\Exception\ApiErrorException;
+use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidApiResponseException;
+use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseJsonException;
+use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseStatusCodeException;
+use ForumPay\PaymentGateway\PHPClient\Logging\LoggerTrait;
+use JsonException;
+use Psr\Log\LoggerInterface;
+
+class HttpClient implements HttpClientInterface
+{
+    use LoggerTrait;
+
+    private const HEADERS = [
+        'Cache-Control' => 'no-cache',
+        'User-Agent' => 'PaymentGateway PHP Client',
+        'Accept' => '*/*',
+        'Accept-Encoding' => 'gzip, deflate, br',
+        'Connection' => 'keep-alive',
+    ];
+
+    private string $userAgentApplicationIdentifier;
+
+    /** @var resource */
+    private $curl;
+
+    private ?LoggerInterface $logger;
+
+    public function __construct(string $userAgentApplicationIdentifier = null)
+    {
+        $this->userAgentApplicationIdentifier = $userAgentApplicationIdentifier;
+        $this->curl = curl_init();
+    }
+
+    public function __destruct()
+    {
+        curl_close($this->curl);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function call(
+        string $method,
+        string $uri,
+        string $apiUser,
+        string $apiSecret,
+        array $parameters = []
+    ): HttpResult {
+        curl_setopt($this->curl, CURLOPT_URL, self::parseUrl($uri, $method, $parameters));
+        curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
+        curl_setopt($this->curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        curl_setopt($this->curl, CURLOPT_USERPWD, self::getAuthorization($apiUser, $apiSecret));
+        if (self::isPost($method)) {
+            curl_setopt($this->curl, CURLOPT_POST, true);
+            curl_setopt($this->curl, CURLOPT_POSTFIELDS, $parameters);
+        }
+
+        $requestId = uniqid();
+        $this->logInfo('Executing cURL request', [
+            'requestId' => $requestId,
+            'url' => self::parseUrl($uri, $method, $parameters),
+        ]);
+
+        $response = curl_exec($this->curl);
+        $info = curl_getinfo($this->curl);
+        $curlError = curl_error($this->curl);
+
+        $this->logInfo('cURL request finished', [
+            'requestId' => $requestId,
+            'response' => $response,
+            'info' => $info,
+            'error' => $curlError,
+        ]);
+
+        if ($response === false) {
+            $this->logError('cURL request failed', [
+                'requestId' => $requestId,
+                'error' => $curlError,
+            ]);
+            throw new InvalidApiResponseException($method, $uri, $parameters, $curlError, $info);
+        }
+
+        if (HttpCodesValidator::isSuccess($info['http_code']) === false) {
+            $this->logError(sprintf('cURL request failed with %s status code', $info['http_code']), [
+                'requestId' => $requestId,
+            ]);
+            throw new InvalidResponseStatusCodeException($method, $uri, $parameters, $info['http_code']);
+        }
+
+        try {
+            $responseJson = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+        } catch (JsonException $e) {
+            $this->logError('cURL request responded with invalid JSON', [
+                'requestId' => $requestId,
+                'response' => $response,
+            ]);
+            throw new InvalidResponseJsonException($method, $uri, $parameters, $response);
+        }
+
+        if (array_key_exists('err', $responseJson)) {
+            $this->logError('cURL request responded with Payment Gateway Webhost error', [
+                'requestId' => $requestId,
+                'error' => $curlError,
+            ]);
+            throw new ApiErrorException($method, $uri, $parameters, $responseJson);
+        }
+
+        return new HttpResult($method, $uri, $parameters, $responseJson, $info, $curlError);
+    }
+
+    private function getHeaders(): array
+    {
+        $headers = self::HEADERS;
+        $headers['User-Agent'] .= '; ' . $this->userAgentApplicationIdentifier;
+
+        return $headers;
+    }
+
+    public function setLogger(?LoggerInterface $logger): void
+    {
+        $this->logger = $logger;
+    }
+
+    private static function parseUrl(string $uri, string $method, array $parameters): string
+    {
+        if (self::isPost($method) || empty($parameters)) {
+            return $uri;
+        } else {
+            return $uri . '?' . http_build_query($parameters);
+        }
+    }
+
+    private static function getAuthorization(string $apiUser, string $apiSecret): string
+    {
+        return $apiUser . ':' . $apiSecret;
+    }
+
+    private static function isPost(string $method): bool
+    {
+        return strtoupper($method) === 'POST';
+    }
+}

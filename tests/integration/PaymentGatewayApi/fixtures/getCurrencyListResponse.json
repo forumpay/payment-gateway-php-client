@@ -1,0 +1,39 @@
+[
+  {
+    "currency":"BTC",
+    "description":"Bitcoin",
+    "status":"OK",
+    "zero_confirmations_enabled":"1",
+    "currency_fiat":"EUR",
+    "rate":"20822.2211",
+    "sell_status":"OK",
+    "sell_rate":"20822.2211",
+    "buy_status":"OK",
+    "buy_rate":"20930.8791",
+    "sell_min_invoice_amount":"0.12",
+    "sell_max_invoice_amount":"650.00",
+    "sell_network_processing_fee":"0.00000226",
+    "buy_min_invoice_amount":"0.66",
+    "buy_max_invoice_amount":"99.00",
+    "buy_network_processing_fee":"0.00003125"
+  },
+  {
+    "currency":"ETH",
+    "description":"Ethereum",
+    "status":"OK",
+    "zero_confirmations_enabled":"0",
+    "currency_fiat":"EUR",
+    "rate":"1431.7278",
+    "sell_status":"OK",
+    "sell_rate":"1431.7278",
+    "buy_status":"OK",
+    "buy_rate":"1439.5130",
+    "sell_min_invoice_amount":"0.01",
+    "sell_max_invoice_amount":"650.00",
+    "sell_network_processing_fee":"0.00021463",
+    "buy_min_invoice_amount":"1.06",
+    "buy_max_invoice_amount":"99.00",
+    "buy_network_processing_fee":"0.00073165"
+  }
+]
+

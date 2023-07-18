@@ -1,0 +1,14 @@
+{
+  "invoice_currency": "EUR",
+  "invoice_amount": "222.00",
+  "currency": "BTC",
+  "rate": "20822.2343",
+  "amount_exchange": "0.01066165",
+  "network_processing_fee": "0.00002875",
+  "amount": "0.0106904",
+  "wait_time": "Less than 2 minutes",
+  "sid": null,
+  "fast_transaction_fee": "0.00012724",
+  "fast_transaction_fee_currency": "BTC\/kB",
+  "payment_id": "b7fa25a4-7cce-45e3-a8cd-6b48328da8d5"
+}
