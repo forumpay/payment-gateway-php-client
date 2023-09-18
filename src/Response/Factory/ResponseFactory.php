@@ -14,6 +14,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 use Psr\Log\LoggerInterface;
 
@@ -96,6 +97,18 @@ class ResponseFactory
         return self::createResponse(
             GetCurrencyListResponse::class,
             Actions::GET_CURRENCY_LIST,
+            $httpResult
+        );
+    }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    public function createRequestKycResponse(HttpResult $httpResult): RequestKycResponse
+    {
+        return self::createResponse(
+            RequestKycResponse::class,
+            Actions::REQUEST_KYC,
             $httpResult
         );
     }

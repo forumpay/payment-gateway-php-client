@@ -8,6 +8,7 @@ class UriParser
 {
     public static function getUri(string $paymentGatewayUri, string $action): string
     {
-        return "$paymentGatewayUri/api/v2/$action/";
+        $uri = rtrim($paymentGatewayUri, '/');
+        return "$uri/$action/";
     }
 }

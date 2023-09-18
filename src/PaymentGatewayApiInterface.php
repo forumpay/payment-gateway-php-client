@@ -10,6 +10,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 
 interface PaymentGatewayApiInterface
@@ -94,4 +95,12 @@ interface PaymentGatewayApiInterface
         string $invoiceCurrency,
         ?string $user = null
     ): GetCurrencyListResponse;
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function requestKyc(
+        string $email,
+        ?string $user = null
+    ): RequestKycResponse;
 }

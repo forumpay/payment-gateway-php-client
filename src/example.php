@@ -99,3 +99,8 @@ $getCurrencyList = $api->getCurrencyList(
 //    'b0ece610-4885-4881-93c5-9d55465ca8f3'
 );
 var_dump($getCurrencyList->toArray());
+
+//$requestKycResponse = $api->requestKyc(
+//    'email@mail.pl'
+//);
+//var_dump($requestKycResponse->toArray());

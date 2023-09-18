@@ -12,7 +12,7 @@ class HttpResult
 
     private array $callParameters;
 
-    private array $response;
+    private ?array $response;
 
     private array $info;
 
@@ -22,7 +22,7 @@ class HttpResult
         string $httpMethod,
         string $uri,
         array $callParameters,
-        array $response,
+        ?array $response,
         array $info = [],
         ?string $error = null
     ) {
@@ -49,7 +49,7 @@ class HttpResult
         return $this->callParameters;
     }
 
-    public function getResponse(): array
+    public function getResponse(): ?array
     {
         return $this->response;
     }

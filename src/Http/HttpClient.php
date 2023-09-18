@@ -104,7 +104,7 @@ class HttpClient implements HttpClientInterface
             throw new InvalidResponseJsonException($method, $uri, $parameters, $response);
         }
 
-        if (array_key_exists('err', $responseJson)) {
+        if (is_array($responseJson) && array_key_exists('err', $responseJson)) {
             $this->logError('cURL request responded with Payment Gateway Webhost error', [
                 'requestId' => $requestId,
                 'error' => $curlError,

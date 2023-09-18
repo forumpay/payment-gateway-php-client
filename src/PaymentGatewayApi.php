@@ -15,6 +15,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\Factory\ResponseFactory;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 use Psr\Log\LoggerInterface;
 
@@ -236,5 +237,25 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         );
 
         return $this->responseFactory->createGetCurrencyListResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function requestKyc(
+        string $email,
+        ?string $user = null
+    ): RequestKycResponse {
+        $httpResult = $this->apiCaller->post(
+            Actions::REQUEST_KYC,
+            [
+                'email' => $email,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createRequestKycResponse($httpResult);
     }
 }

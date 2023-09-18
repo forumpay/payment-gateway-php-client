@@ -17,4 +17,6 @@ class Actions
     public const CANCEL_PAYMENT = 'CancelPayment';
 
     public const GET_CURRENCY_LIST = 'GetCurrencyList';
+
+    public const REQUEST_KYC = 'RequestKyc';
 }
