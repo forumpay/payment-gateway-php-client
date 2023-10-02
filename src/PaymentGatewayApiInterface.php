@@ -51,7 +51,8 @@ interface PaymentGatewayApiInterface
         ?string $walletAppId,
         ?string $sid,
         ?string $requireKytForConfirmation,
-        ?string $user = null
+        ?string $user = null,
+        ?string $payerKycPin = null
     ): StartPaymentResponse;
 
     /**

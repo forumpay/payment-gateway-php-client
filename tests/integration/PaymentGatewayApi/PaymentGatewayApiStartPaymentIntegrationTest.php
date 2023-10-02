@@ -29,6 +29,8 @@ class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewa
         'wallet_app_id' => null,
         'sid' => null,
         'require_kyt_for_confirmation' => 'false',
+        'user' => 'user',
+        'payer_kyc_pin' => '42355467',
     ];
 
     public function testItCallsStartPayment()

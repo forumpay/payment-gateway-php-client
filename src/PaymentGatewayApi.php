@@ -108,7 +108,8 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         ?string $walletAppId,
         ?string $sid,
         ?string $requireKytForConfirmation,
-        ?string $user = null
+        ?string $user = null,
+        ?string $payerKycPin = null
     ): StartPaymentResponse {
         $httpResult = $this->apiCaller->post(
             Actions::START_PAYMENT,
@@ -133,6 +134,8 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
                 'locale' => $this->locale,
             ] + ($user !== null ? [
                 'user' => $user,
+            ] : []) + ($payerKycPin !== null ? [
+                'payer_kyc_pin' => $payerKycPin,
             ] : [])
         );
 
