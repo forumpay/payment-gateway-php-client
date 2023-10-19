@@ -108,7 +108,7 @@ class HttpClient implements HttpClientInterface
             $this->logError('cURL request responded with Payment Gateway Webhost error', [
                 'requestId' => $requestId,
                 'error' => $curlError,
-                'errCode' => $responseJson['errCode'] ?? null,
+                'errCode' => $responseJson['err_code'] ?? null,
                 'additional' => $responseJson['additional'] ?? null,
             ]);
             throw new ApiErrorException($method, $uri, $parameters, $responseJson);

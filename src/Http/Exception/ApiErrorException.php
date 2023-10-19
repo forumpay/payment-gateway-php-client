@@ -17,7 +17,7 @@ class ApiErrorException extends AbstractApiException
             $uri,
             $callParameters,
             $responseJson['err'],
-            $responseJson['errCode'] ?? null,
+            $responseJson['err_code'] ?? null,
             $responseJson['additional'] ?? null,
         );
     }
