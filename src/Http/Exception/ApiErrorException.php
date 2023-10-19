@@ -12,6 +12,13 @@ class ApiErrorException extends AbstractApiException
         array $callParameters,
         array $responseJson
     ) {
-        parent::__construct($httpMethod, $uri, $callParameters, $responseJson['err']);
+        parent::__construct(
+            $httpMethod,
+            $uri,
+            $callParameters,
+            $responseJson['err'],
+            $responseJson['errCode'] ?? null,
+            $responseJson['additional'] ?? null,
+        );
     }
 }

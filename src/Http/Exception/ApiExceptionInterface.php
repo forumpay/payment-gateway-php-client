@@ -13,4 +13,8 @@ interface ApiExceptionInterface extends Throwable
     public function getUri(): string;
 
     public function getCallParameters(): array;
+
+    public function getErrorCode(): ?string;
+
+    public function getAdditionalData(): ?array;
 }

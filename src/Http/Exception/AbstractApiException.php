@@ -15,16 +15,24 @@ abstract class AbstractApiException extends Exception implements ApiExceptionInt
 
     private array $callParameters;
 
+    private ?string $errorCode;
+
+    private ?array $additionalData;
+
     public function __construct(
         string $httpMethod,
         string $uri,
         array $callParameters,
         string $message,
+        ?string $errorCode = null,
+        ?array $additionalData = null,
         Throwable $previous = null
     ) {
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
         $this->callParameters = $callParameters;
+        $this->errorCode = $errorCode;
+        $this->additionalData = $additionalData;
         parent::__construct($message, 0, $previous);
     }
 
@@ -41,5 +49,15 @@ abstract class AbstractApiException extends Exception implements ApiExceptionInt
     public function getCallParameters(): array
     {
         return $this->callParameters;
+    }
+
+    public function getErrorCode(): ?string
+    {
+        return $this->errorCode;
+    }
+
+    public function getAdditionalData(): ?array
+    {
+        return $this->additionalData;
     }
 }

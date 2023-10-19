@@ -22,7 +22,7 @@ class InvalidResponseException extends AbstractApiException
     ) {
         $this->action = $action;
         $this->response = $response;
-        parent::__construct($httpMethod, $uri, $callParameters, $previous->getMessage(), $previous);
+        parent::__construct($httpMethod, $uri, $callParameters, $previous->getMessage(), null, null, $previous);
     }
 
     public function getAction(): string
