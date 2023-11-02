@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Response\GetTransactions;
 
+use ForumPay\PaymentGateway\PHPClient\Response\GetTransactions\CustomerDetails;
+
 class TransactionInvoice
 {
     private string $state;
@@ -62,6 +64,8 @@ class TransactionInvoice
 
     private ?string $paymentId;
 
+    private ?CustomerDetails $customerDetails;
+
     public function __construct(
         string $state,
         string $status,
@@ -90,7 +94,8 @@ class TransactionInvoice
         ?string $itemName,
         ?string $accessToken,
         ?string $sid,
-        ?string $paymentId
+        ?string $paymentId,
+        ?CustomerDetails $customerDetails
     ) {
         $this->state = $state;
         $this->status = $status;
@@ -120,6 +125,7 @@ class TransactionInvoice
         $this->accessToken = $accessToken;
         $this->sid = $sid;
         $this->paymentId = $paymentId;
+        $this->customerDetails = $customerDetails;
     }
 
     public static function createFromArray(array $transaction): self
@@ -153,6 +159,7 @@ class TransactionInvoice
             $transaction['access_token'],
             $transaction['sid'],
             $transaction['payment_id'],
+            isset($transaction['customer_details']) ? CustomerDetails::createFromArray($transaction['customer_details']) : null,
         );
     }
 
@@ -296,6 +303,11 @@ class TransactionInvoice
         return $this->paymentId;
     }
 
+    public function getCustomerDetails(): ?CustomerDetails
+    {
+        return $this->customerDetails;
+    }
+
     public function toArray(): array
     {
         return [
@@ -327,6 +339,7 @@ class TransactionInvoice
             'access_token' => $this->accessToken,
             'sid' => $this->sid,
             'payment_id' => $this->paymentId,
+            'customer_details' => $this->customerDetails !== null ? $this->customerDetails->toArray() : null,
         ];
     }
 }
