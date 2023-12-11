@@ -40,6 +40,7 @@ class PaymentGatewayApiGetCurrencyListIntegrationTest extends AbstractPaymentGat
         self::assertEquals('OK', $currency1->getStatus());
         self::assertEquals('1', $currency1->getZeroConfirmationsEnabled());
         self::assertEquals('EUR', $currency1->getCurrencyFiat());
+        self::assertEquals('https://example-pgw.forumpay.com/pay/images/coins/btc.png', $currency1->getIconUrl());
         self::assertEquals('20822.2211', $currency1->getRate());
         self::assertEquals('OK', $currency1->getSellStatus());
         self::assertEquals('20822.2211', $currency1->getSellRate());
@@ -57,6 +58,7 @@ class PaymentGatewayApiGetCurrencyListIntegrationTest extends AbstractPaymentGat
         self::assertEquals('OK', $currency2->getStatus());
         self::assertEquals('0', $currency2->getZeroConfirmationsEnabled());
         self::assertEquals('EUR', $currency2->getCurrencyFiat());
+        self::assertEquals('https://example-pgw.forumpay.com/pay/images/coins/eth.png', $currency2->getIconUrl());
         self::assertEquals('1431.7278', $currency2->getRate());
         self::assertEquals('OK', $currency2->getSellStatus());
         self::assertEquals('1431.7278', $currency2->getSellRate());

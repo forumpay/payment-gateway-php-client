@@ -16,6 +16,8 @@ class Currency
 
     private string $currencyFiat;
 
+    private string $iconUrl;
+
     private ?string $rate;
 
     private string $sellStatus;
@@ -44,6 +46,7 @@ class Currency
         string $status,
         int $zeroConfirmationsEnabled,
         string $currencyFiat,
+        string $iconUrl,
         ?string $rate,
         string $sellStatus,
         ?string $sellRate,
@@ -61,6 +64,7 @@ class Currency
         $this->status = $status;
         $this->zeroConfirmationsEnabled = $zeroConfirmationsEnabled;
         $this->currencyFiat = $currencyFiat;
+        $this->iconUrl = $iconUrl;
         $this->rate = $rate;
         $this->sellStatus = $sellStatus;
         $this->sellRate = $sellRate;
@@ -82,6 +86,7 @@ class Currency
             $currency['status'],
             (int) $currency['zero_confirmations_enabled'],
             $currency['currency_fiat'],
+            $currency['icon_url'],
             $currency['rate'],
             $currency['sell_status'],
             $currency['sell_rate'],
@@ -119,6 +124,11 @@ class Currency
     public function getCurrencyFiat(): string
     {
         return $this->currencyFiat;
+    }
+
+    public function getIconUrl(): string
+    {
+        return $this->iconUrl;
     }
 
     public function getRate(): ?string
@@ -184,6 +194,7 @@ class Currency
             'status' => $this->status,
             'zero_confirmations_enabled' => $this->zeroConfirmationsEnabled,
             'currency_fiat' => $this->currencyFiat,
+            'icon_url' => $this->iconUrl,
             'rate' => $this->rate,
             'sell_status' => $this->sellStatus,
             'sell_rate' => $this->sellRate,
