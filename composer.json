@@ -6,7 +6,7 @@
     "require": {
         "php": ">=7.4",
         "ext-curl": "*",
-        "psr/log": "^1.1.4",
+        "psr/log": ">=1.1.4",
         "ext-json": "*"
     },
     "require-dev": {
