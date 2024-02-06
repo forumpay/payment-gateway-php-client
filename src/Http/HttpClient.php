@@ -9,6 +9,7 @@ use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidApiResponseException
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseJsonException;
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseStatusCodeException;
 use ForumPay\PaymentGateway\PHPClient\Logging\LoggerTrait;
+use ForumPay\PaymentGateway\PHPClient\PaymentGatewayApi;
 use JsonException;
 use Psr\Log\LoggerInterface;
 
@@ -20,7 +21,6 @@ class HttpClient implements HttpClientInterface
         'Cache-Control' => 'no-cache',
         'User-Agent' => 'PaymentGateway PHP Client',
         'Accept' => '*/*',
-        'Accept-Encoding' => 'gzip, deflate, br',
         'Connection' => 'keep-alive',
     ];
 
@@ -57,6 +57,7 @@ class HttpClient implements HttpClientInterface
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($this->curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($this->curl, CURLOPT_USERPWD, self::getAuthorization($apiUser, $apiSecret));
+        curl_setopt($this->curl, CURLOPT_ENCODING, "");
         if (self::isPost($method)) {
             curl_setopt($this->curl, CURLOPT_POST, true);
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $parameters);
@@ -120,9 +121,18 @@ class HttpClient implements HttpClientInterface
     private function getHeaders(): array
     {
         $headers = self::HEADERS;
-        $headers['User-Agent'] .= '; ' . $this->userAgentApplicationIdentifier;
+        $headers['User-Agent'] .= ' ' . PaymentGatewayApi::VERSION;
 
-        return $headers;
+        if ($this->userAgentApplicationIdentifier) {
+            $headers['User-Agent'] .= '; ' . $this->userAgentApplicationIdentifier;
+        }
+
+        $headersForCurl = [];
+        foreach ($headers as $header => $value) {
+            $headersForCurl[] = "$header: $value";
+        }
+
+        return $headersForCurl;
     }
 
     public function setLogger(?LoggerInterface $logger): void
