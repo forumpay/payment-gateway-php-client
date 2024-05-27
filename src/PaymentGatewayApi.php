@@ -21,7 +21,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.1.3';
+    public const VERSION = '1.1.4';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -111,7 +111,8 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         ?string $sid,
         ?string $requireKytForConfirmation,
         ?string $user = null,
-        ?string $payerKycPin = null
+        ?string $payerKycPin = null,
+        string $autoAcceptLatePayment = 'false'
     ): StartPaymentResponse {
         $httpResult = $this->apiCaller->post(
             Actions::START_PAYMENT,
@@ -129,6 +130,7 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
                 'auto_accept_underpayment' => $autoAcceptUnderpayment,
                 'auto_accept_underpayment_min' => $autoAcceptUnderpaymentMin,
                 'auto_accept_overpayment' => $autoAcceptOverpayment,
+                'auto_accept_late_payment' => $autoAcceptLatePayment,
                 'payer_user_agent' => $payerUserAgent,
                 'wallet_app_id' => $walletAppId,
                 'sid' => $sid,

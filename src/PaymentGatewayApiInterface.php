@@ -52,7 +52,8 @@ interface PaymentGatewayApiInterface
         ?string $sid,
         ?string $requireKytForConfirmation,
         ?string $user = null,
-        ?string $payerKycPin = null
+        ?string $payerKycPin = null,
+        string $autoAcceptLatePayment = 'false'
     ): StartPaymentResponse;
 
     /**

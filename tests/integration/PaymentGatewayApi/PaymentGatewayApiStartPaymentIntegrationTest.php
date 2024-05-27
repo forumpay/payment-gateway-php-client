@@ -31,6 +31,7 @@ class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewa
         'require_kyt_for_confirmation' => 'false',
         'user' => 'user',
         'payer_kyc_pin' => '42355467',
+        'auto_accept_late_payment' => 'false',
     ];
 
     public function testItCallsStartPayment()
