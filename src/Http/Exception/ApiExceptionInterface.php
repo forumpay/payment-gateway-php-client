@@ -14,6 +14,8 @@ interface ApiExceptionInterface extends Throwable
 
     public function getCallParameters(): array;
 
+    public function getCfRayId(): string;
+
     public function getErrorCode(): ?string;
 
     public function getAdditionalData(): ?array;

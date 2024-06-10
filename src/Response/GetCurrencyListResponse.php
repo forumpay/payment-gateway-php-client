@@ -12,7 +12,7 @@ class GetCurrencyListResponse
     private array $currencies;
 
     public function __construct(
-        array $currencies
+        array $currencies = []
     ) {
         $this->currencies = $currencies;
     }

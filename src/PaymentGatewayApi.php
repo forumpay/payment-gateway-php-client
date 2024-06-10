@@ -15,13 +15,14 @@ use ForumPay\PaymentGateway\PHPClient\Response\Factory\ResponseFactory;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.1.4';
+    public const VERSION = '1.2.0';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -53,6 +54,19 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         $this->responseFactory = new ResponseFactory(
             $logger
         );
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function ping(): PingResponse
+    {
+        $httpResult = $this->apiCaller->get(
+            Actions::PING,
+            [],
+        );
+
+        return $this->responseFactory->createPingResponse($httpResult);
     }
 
     /**
@@ -112,7 +126,10 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         ?string $requireKytForConfirmation,
         ?string $user = null,
         ?string $payerKycPin = null,
-        string $autoAcceptLatePayment = 'false'
+        string $autoAcceptLatePayment = 'false',
+        ?string $webhookUrl = null,
+        ?string $onSuccessRedirectUrl = null,
+        ?string $onFailureRedirectUrl = null
     ): StartPaymentResponse {
         $httpResult = $this->apiCaller->post(
             Actions::START_PAYMENT,
@@ -140,6 +157,12 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
                 'user' => $user,
             ] : []) + ($payerKycPin !== null ? [
                 'payer_kyc_pin' => $payerKycPin,
+            ] : []) + ($webhookUrl !== null ? [
+                'webhook_url' => $webhookUrl,
+            ] : []) + ($onSuccessRedirectUrl !== null ? [
+                'on_success_redirect_url' => $onSuccessRedirectUrl,
+            ] : []) + ($onFailureRedirectUrl !== null ? [
+                'on_failure_redirect_url' => $onFailureRedirectUrl,
             ] : [])
         );
 

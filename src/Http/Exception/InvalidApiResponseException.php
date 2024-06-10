@@ -12,11 +12,13 @@ class InvalidApiResponseException extends AbstractApiException
         string $httpMethod,
         string $uri,
         array $callParameters,
+        string $cfRayId,
         string $curlError,
+        int $curlErrno,
         array $curlInfo
     ) {
         $this->curlInfo = $curlInfo;
-        parent::__construct($httpMethod, $uri, $callParameters, $curlError);
+        parent::__construct($httpMethod, $uri, $callParameters, $cfRayId, $curlError, (string) $curlErrno);
     }
 
     public function getCurlInfo(): array

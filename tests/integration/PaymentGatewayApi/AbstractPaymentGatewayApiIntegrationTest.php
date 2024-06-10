@@ -52,6 +52,8 @@ abstract class AbstractPaymentGatewayApiIntegrationTest extends TestCase
             'locale' => self::MOCK_LOCALE,
         ];
 
+        $cfRayId = "Cloudflare RayId";
+
         $apiCallerMock = $this->getMockBuilder(HttpClient::class)
             ->setConstructorArgs([self::MOCK_USER_AGENT])
             ->onlyMethods(['call'])
@@ -59,7 +61,7 @@ abstract class AbstractPaymentGatewayApiIntegrationTest extends TestCase
 
         $uri = UriParser::getUri(self::MOCK_PGW_URI, $action);
 
-        $httpResult = new HttpResult($method, $uri, $callParameters, $this->mockedApiResponse, [], '');
+        $httpResult = new HttpResult($method, $uri, $callParameters, $cfRayId, $this->mockedApiResponse, [], '');
         $apiCallerMock
             ->method('call')
             ->with(

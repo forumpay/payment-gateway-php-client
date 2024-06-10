@@ -10,12 +10,14 @@ class ApiErrorException extends AbstractApiException
         string $httpMethod,
         string $uri,
         array $callParameters,
+        string $cfRayId,
         array $responseJson
     ) {
         parent::__construct(
             $httpMethod,
             $uri,
             $callParameters,
+            $cfRayId,
             $responseJson['err'],
             $responseJson['err_code'] ?? null,
             $responseJson['additional'] ?? null,

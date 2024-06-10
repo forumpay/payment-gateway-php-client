@@ -12,11 +12,13 @@ class InvalidResponseStatusCodeException extends AbstractApiException
         string $httpMethod,
         string $uri,
         array $callParameters,
-        int $responseStatusCode
+        string $cfRayId,
+        int $responseStatusCode,
+        ?string $message
     ) {
         $this->responseStatusCode = $responseStatusCode;
-        $message = sprintf('Call to Payment Gateway API responded with %d status code', $responseStatusCode);
-        parent::__construct($httpMethod, $uri, $callParameters, $message);
+        $message = $message ?? sprintf('Call to Payment Gateway API responded with %d status code', $responseStatusCode);
+        parent::__construct($httpMethod, $uri, $callParameters, $cfRayId, $message);
     }
 
     public function getResponseStatusCode(): int

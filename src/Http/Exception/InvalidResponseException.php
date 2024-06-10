@@ -16,13 +16,14 @@ class InvalidResponseException extends AbstractApiException
         string $httpMethod,
         string $uri,
         array $callParameters,
+        string $cfRayId,
         string $action,
         array $response,
         Throwable $previous
     ) {
         $this->action = $action;
         $this->response = $response;
-        parent::__construct($httpMethod, $uri, $callParameters, $previous->getMessage(), null, null, $previous);
+        parent::__construct($httpMethod, $uri, $callParameters, $cfRayId, $previous->getMessage(), null, null, $previous);
     }
 
     public function getAction(): string

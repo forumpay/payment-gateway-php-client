@@ -53,7 +53,10 @@ interface PaymentGatewayApiInterface
         ?string $requireKytForConfirmation,
         ?string $user = null,
         ?string $payerKycPin = null,
-        string $autoAcceptLatePayment = 'false'
+        string $autoAcceptLatePayment = 'false',
+        ?string $webhookUrl = null,
+        ?string $onSuccessRedirectUrl = null,
+        ?string $onFailureRedirectUrl = null
     ): StartPaymentResponse;
 
     /**

@@ -14,6 +14,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 use Psr\Log\LoggerInterface;
@@ -27,6 +28,18 @@ class ResponseFactory
     public function __construct(?LoggerInterface $logger = null)
     {
         $this->logger = $logger;
+    }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    public function createPingResponse(HttpResult $httpResult): PingResponse
+    {
+        return self::createResponse(
+            PingResponse::class,
+            Actions::PING,
+            $httpResult
+        );
     }
 
     /**
@@ -128,7 +141,7 @@ class ResponseFactory
                 'error' => $exception->getMessage(),
                 'response' => $httpResult->getResponse(),
             ]);
-            throw new InvalidResponseException($httpResult->getHttpMethod(), $httpResult->getUri(), $httpResult->getCallParameters(), $action, $httpResult->getResponse(), $exception);
+            throw new InvalidResponseException($httpResult->getHttpMethod(), $httpResult->getUri(), $httpResult->getCallParameters(), $httpResult->getCfRayId(), $action, $httpResult->getResponse(), $exception);
         }
     }
 }

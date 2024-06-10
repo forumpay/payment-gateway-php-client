@@ -52,12 +52,20 @@ class HttpClient implements HttpClientInterface
         string $apiSecret,
         array $parameters = []
     ): HttpResult {
+        $cfRayHeader = '';
         curl_setopt($this->curl, CURLOPT_URL, self::parseUrl($uri, $method, $parameters));
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, $this->getHeaders());
         curl_setopt($this->curl, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
         curl_setopt($this->curl, CURLOPT_USERPWD, self::getAuthorization($apiUser, $apiSecret));
         curl_setopt($this->curl, CURLOPT_ENCODING, "");
+        curl_setopt($this->curl, CURLOPT_HEADERFUNCTION, function ($curl, $header) use (&$cfRayHeader) {
+            $length = strlen($header);
+            if (stripos($header, 'Cf-Ray:') === 0) {
+                $cfRayHeader = trim(substr($header, 7));
+            }
+            return $length;
+        });
         if (self::isPost($method)) {
             curl_setopt($this->curl, CURLOPT_POST, true);
             curl_setopt($this->curl, CURLOPT_POSTFIELDS, $parameters);
@@ -72,6 +80,7 @@ class HttpClient implements HttpClientInterface
         $response = curl_exec($this->curl);
         $info = curl_getinfo($this->curl);
         $curlError = curl_error($this->curl);
+        $curlErrno = curl_errno($this->curl);
 
         $this->logInfo('cURL request finished', [
             'requestId' => $requestId,
@@ -84,15 +93,42 @@ class HttpClient implements HttpClientInterface
             $this->logError('cURL request failed', [
                 'requestId' => $requestId,
                 'error' => $curlError,
+                'errno' => $curlErrno,
             ]);
-            throw new InvalidApiResponseException($method, $uri, $parameters, $curlError, $info);
+            $error = $curlError;
+            if ($curlErrno === CURLE_OPERATION_TIMEDOUT || $curlErrno === CURLE_COULDNT_CONNECT) {
+                $error = 'Timeout, please check your configuration';
+            }
+
+            throw new InvalidApiResponseException($method, $uri, $parameters, $cfRayHeader, $error, $curlErrno, $info);
         }
 
         if (HttpCodesValidator::isSuccess($info['http_code']) === false) {
-            $this->logError(sprintf('cURL request failed with %s status code', $info['http_code']), [
+            $errCode = $info['http_code'];
+            if ($errCode === 401) {
+                $errMessage = 'No api key';
+            } elseif ($errCode === 403) {
+                $errMessage = 'API not reachable. Please contact support.';
+            }
+
+            try {
+                $responseJson = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+                if (is_array($responseJson) && array_key_exists('err', $responseJson)) {
+                    $errCode = $responseJson['err_code'] ?? $errCode;
+                    $errMessage = $responseJson['err'] ?? "Bad Request";
+                }
+            } catch (JsonException $e) {
+                //
+            }
+
+            $this->logError('cURL request responded with error', [
                 'requestId' => $requestId,
+                'errCode' => $errCode,
+                'error' => $errMessage,
+                'additional' => $responseJson['additional'] ?? null,
             ]);
-            throw new InvalidResponseStatusCodeException($method, $uri, $parameters, $info['http_code']);
+
+            throw new InvalidResponseStatusCodeException($method, $uri, $parameters, $cfRayHeader, $errCode, $errMessage);
         }
 
         try {
@@ -102,7 +138,7 @@ class HttpClient implements HttpClientInterface
                 'requestId' => $requestId,
                 'response' => $response,
             ]);
-            throw new InvalidResponseJsonException($method, $uri, $parameters, $response);
+            throw new InvalidResponseJsonException($method, $uri, $parameters, $cfRayHeader, $response);
         }
 
         if (is_array($responseJson) && array_key_exists('err', $responseJson)) {
@@ -112,10 +148,10 @@ class HttpClient implements HttpClientInterface
                 'errCode' => $responseJson['err_code'] ?? null,
                 'additional' => $responseJson['additional'] ?? null,
             ]);
-            throw new ApiErrorException($method, $uri, $parameters, $responseJson);
+            throw new ApiErrorException($method, $uri, $parameters, $cfRayHeader, $responseJson);
         }
 
-        return new HttpResult($method, $uri, $parameters, $responseJson, $info, $curlError);
+        return new HttpResult($method, $uri, $parameters, $cfRayHeader, $responseJson, $info, $curlError);
     }
 
     private function getHeaders(): array

@@ -12,6 +12,8 @@ class HttpResult
 
     private array $callParameters;
 
+    private string $cfRayId;
+
     private ?array $response;
 
     private array $info;
@@ -22,6 +24,7 @@ class HttpResult
         string $httpMethod,
         string $uri,
         array $callParameters,
+        string $cfRayId,
         ?array $response,
         array $info = [],
         ?string $error = null
@@ -29,6 +32,7 @@ class HttpResult
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;
         $this->callParameters = $callParameters;
+        $this->cfRayId = $cfRayId;
         $this->response = $response;
         $this->info = $info;
         $this->error = $error;
@@ -47,6 +51,11 @@ class HttpResult
     public function getCallParameters(): array
     {
         return $this->callParameters;
+    }
+
+    public function getCfRayId()
+    {
+        return $this->cfRayId;
     }
 
     public function getResponse(): ?array

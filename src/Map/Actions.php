@@ -6,6 +6,8 @@ namespace ForumPay\PaymentGateway\PHPClient\Map;
 
 class Actions
 {
+    public const PING = 'Ping';
+
     public const GET_RATE = 'GetRate';
 
     public const START_PAYMENT = 'StartPayment';

@@ -38,11 +38,13 @@ try {
 
 # Available endpoints
 
+- Ping
 - GetRate
 - StartPayment
 - CheckPayment
 - GetTransactions
 - CancelPayment
 - GetCurrencyList
+- RequestKyc
 
 For corresponding methods refer to `PaymentGatewayApiInterface` in `src/PaymentGatewayApiInterface.php`
