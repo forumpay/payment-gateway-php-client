@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.2.0';
+    public const VERSION = '1.2.1';
 
     private const DEFAULT_LOCALE = 'en-GB';
 

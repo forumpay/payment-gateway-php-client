@@ -105,6 +105,8 @@ class HttpClient implements HttpClientInterface
 
         if (HttpCodesValidator::isSuccess($info['http_code']) === false) {
             $errCode = $info['http_code'];
+            $errMessage = "An error occurred";
+
             if ($errCode === 401) {
                 $errMessage = 'No api key';
             } elseif ($errCode === 403) {
