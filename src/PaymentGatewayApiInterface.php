@@ -56,7 +56,8 @@ interface PaymentGatewayApiInterface
         string $autoAcceptLatePayment = 'false',
         ?string $webhookUrl = null,
         ?string $onSuccessRedirectUrl = null,
-        ?string $onFailureRedirectUrl = null
+        ?string $onFailureRedirectUrl = null,
+        ?string $autoAcceptOverpaymentMax = null
     ): StartPaymentResponse;
 
     /**
