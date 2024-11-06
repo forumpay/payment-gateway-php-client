@@ -10,9 +10,12 @@ class PingResponse
 {
     private string $result;
 
-    public function __construct(string $result)
+    private ?array $webhookResult;
+
+    public function __construct(string $result, ?array $webhookResult = [])
     {
         $this->result = $result;
+        $this->webhookResult = $webhookResult;
     }
 
     public static function createFromHttpResult(HttpResult $httpResult): self
@@ -25,6 +28,7 @@ class PingResponse
 
         return new self(
             $responseJson['result'],
+            $responseJson['webhook_response'] ?? []
         );
     }
 
@@ -33,10 +37,16 @@ class PingResponse
         return $this->result;
     }
 
+    public function getWebhookResult(): array
+    {
+        return $this->webhookResult;
+    }
+
     public function toArray(): array
     {
         return [
             'result' => $this->result,
+            'webhook_response' => $this->webhookResult,
         ];
     }
 

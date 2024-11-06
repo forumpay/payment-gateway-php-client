@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.2.2';
+    public const VERSION = '1.2.3';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -59,11 +59,14 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
     /**
      * @throws ApiExceptionInterface
      */
-    public function ping(): PingResponse
+    public function ping(?string $webhook = null): PingResponse
     {
         $httpResult = $this->apiCaller->get(
             Actions::PING,
-            [],
+            []
+            + ($webhook !== null ? [
+                'webhook_url' => $webhook,
+            ] : [])
         );
 
         return $this->responseFactory->createPingResponse($httpResult);
