@@ -56,6 +56,8 @@ class StartPaymentResponse
 
     private string $paymentId;
 
+    private ?array $beneficiaryVaspDetails;
+
     public function __construct(
         string $invoiceCurrency,
         ?string $invoiceAmount,
@@ -80,7 +82,8 @@ class StartPaymentResponse
         string $accessUrl,
         string $statsToken,
         array $notices,
-        string $paymentId
+        string $paymentId,
+        ?array $beneficiaryVaspDetails
     ) {
         $this->invoiceCurrency = $invoiceCurrency;
         $this->invoiceAmount = $invoiceAmount;
@@ -106,6 +109,7 @@ class StartPaymentResponse
         $this->statsToken = $statsToken;
         $this->notices = $notices;
         $this->paymentId = $paymentId;
+        $this->beneficiaryVaspDetails = $beneficiaryVaspDetails;
     }
 
     public static function createFromHttpResult(HttpResult $httpResult): self
@@ -136,7 +140,8 @@ class StartPaymentResponse
             $responseJson['access_url'],
             $responseJson['stats_token'],
             $responseJson['notices'],
-            $responseJson['payment_id']
+            $responseJson['payment_id'],
+            $responseJson['beneficiary_vasp_details'],
         );
     }
 
@@ -260,6 +265,11 @@ class StartPaymentResponse
         return $this->paymentId;
     }
 
+    public function getBeneficiaryVaspDetails(): ?array
+    {
+        return $this->beneficiaryVaspDetails;
+    }
+
     public function toArray(): array
     {
         return [
@@ -287,6 +297,7 @@ class StartPaymentResponse
             'stats_token' => $this->statsToken,
             'notices' => $this->notices,
             'payment_id' => $this->paymentId,
+            'beneficiary_vasp_details' => $this->beneficiaryVaspDetails,
         ];
     }
 }

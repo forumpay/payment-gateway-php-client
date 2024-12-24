@@ -22,7 +22,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.2.3';
+    public const VERSION = '1.2.4';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -133,7 +133,8 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         ?string $webhookUrl = null,
         ?string $onSuccessRedirectUrl = null,
         ?string $onFailureRedirectUrl = null,
-        ?string $autoAcceptOverpaymentMax = null
+        ?string $autoAcceptOverpaymentMax = null,
+        ?array $payer = null
     ): StartPaymentResponse {
         $httpResult = $this->apiCaller->post(
             Actions::START_PAYMENT,
@@ -169,7 +170,7 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
                 'on_failure_redirect_url' => $onFailureRedirectUrl,
             ] : []) + ($autoAcceptOverpaymentMax !== null ? [
                 'auto_accept_overpayment_max' => $autoAcceptOverpaymentMax,
-            ] : [])
+            ] : []) + ($payer !== null ? $payer : [])
         );
 
         return $this->responseFactory->createStartPaymentResponse($httpResult);
