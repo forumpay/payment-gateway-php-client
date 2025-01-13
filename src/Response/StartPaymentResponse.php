@@ -141,7 +141,7 @@ class StartPaymentResponse
             $responseJson['stats_token'],
             $responseJson['notices'],
             $responseJson['payment_id'],
-            $responseJson['beneficiary_vasp_details'],
+            $responseJson['beneficiary_vasp_details'] ?? null,
         );
     }
 
