@@ -10,6 +10,8 @@ class Actions
 
     public const GET_RATE = 'GetRate';
 
+    public const GET_RATES = 'GetRates';
+
     public const START_PAYMENT = 'StartPayment';
 
     public const CHECK_PAYMENT = 'CheckPayment';

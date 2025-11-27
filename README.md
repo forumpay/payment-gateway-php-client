@@ -40,6 +40,7 @@ try {
 
 - Ping
 - GetRate
+- GetRates
 - StartPayment
 - CheckPayment
 - GetTransactions

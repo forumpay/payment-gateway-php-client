@@ -13,6 +13,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\CancelPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
@@ -50,6 +51,18 @@ class ResponseFactory
         return self::createResponse(
             GetRateResponse::class,
             Actions::GET_RATE,
+            $httpResult
+        );
+    }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    public function createGetRatesResponse(HttpResult $httpResult): GetRatesResponse
+    {
+        return self::createResponse(
+            GetRatesResponse::class,
+            Actions::GET_RATES,
             $httpResult
         );
     }

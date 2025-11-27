@@ -14,6 +14,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\Factory\ResponseFactory;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
@@ -22,7 +23,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.2.5';
+    public const VERSION = '1.3.0';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -104,6 +105,42 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         );
 
         return $this->responseFactory->createGetRateResponse($httpResult);
+    }
+
+    /**
+     * Get rates for multiple cryptocurrencies
+     *
+     * @throws ApiExceptionInterface
+     */
+    public function getRates(
+        string $posId,
+        string $invoiceCurrency,
+        string $invoiceAmount,
+        string $currencies,
+        ?string $acceptZeroConfirmations = null,
+        ?string $requireKytForConfirmation = null,
+        ?string $walletAppId = null,
+        ?string $sid = null,
+        ?string $user = null
+    ): GetRatesResponse {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_RATES,
+            [
+                'pos_id' => $posId,
+                'invoice_currency' => $invoiceCurrency,
+                'invoice_amount' => $invoiceAmount,
+                'currencies' => $currencies,
+                'accept_zero_confirmations' => $acceptZeroConfirmations,
+                'require_kyt_for_confirmation' => $requireKytForConfirmation,
+                'wallet_app_id' => $walletAppId,
+                'sid' => $sid,
+                'locale' => $this->locale,
+            ] + ($user !== null ? [
+                'user' => $user,
+            ] : [])
+        );
+
+        return $this->responseFactory->createGetRatesResponse($httpResult);
     }
 
     /**

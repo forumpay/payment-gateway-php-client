@@ -9,6 +9,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\CancelPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
@@ -29,6 +30,23 @@ interface PaymentGatewayApiInterface
         ?string $sid,
         ?string $user = null
     ): GetRateResponse;
+
+    /**
+     * Get rates for multiple cryptocurrencies
+     *
+     * @throws ApiExceptionInterface
+     */
+    public function getRates(
+        string $posId,
+        string $invoiceCurrency,
+        string $invoiceAmount,
+        string $currencies,
+        ?string $acceptZeroConfirmations = null,
+        ?string $requireKytForConfirmation = null,
+        ?string $walletAppId = null,
+        ?string $sid = null,
+        ?string $user = null
+    ): GetRatesResponse;
 
     /**
      * @throws ApiExceptionInterface

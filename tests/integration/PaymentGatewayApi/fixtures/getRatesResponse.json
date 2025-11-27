@@ -1,0 +1,38 @@
+{
+  "payment_id": "c55a45a5-8ddf-56f4-b9ed-7c59439ea9e6",
+  "invoice_amount": "100.00",
+  "invoice_currency": "USD",
+  "sid": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+  "currencies": [
+    {
+      "currency": "BTC",
+      "rate": "42500.5432",
+      "amount_exchange": "0.00235294",
+      "network_processing_fee": "0.00001500",
+      "amount": "0.00236794",
+      "wait_time": "Less than 2 minutes",
+      "fast_transaction_fee": "0.00008500",
+      "fast_transaction_fee_currency": "BTC/kB"
+    },
+    {
+      "currency": "ETH",
+      "rate": "2250.7890",
+      "amount_exchange": "0.04443210",
+      "network_processing_fee": "0.00050000",
+      "amount": "0.04493210",
+      "wait_time": "Less than 1 minute",
+      "fast_transaction_fee": "0.00100000",
+      "fast_transaction_fee_currency": "ETH"
+    },
+    {
+      "currency": "USDT",
+      "rate": "1.0000",
+      "amount_exchange": "100.00000000",
+      "network_processing_fee": "1.00000000",
+      "amount": "101.00000000",
+      "wait_time": "Less than 1 minute",
+      "fast_transaction_fee": "5.00000000",
+      "fast_transaction_fee_currency": "USDT"
+    }
+  ]
+}
