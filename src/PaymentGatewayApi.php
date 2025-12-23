@@ -16,6 +16,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
@@ -23,7 +24,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.3.0';
+    public const VERSION = '1.4.0';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -331,5 +332,22 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         );
 
         return $this->responseFactory->createRequestKycResponse($httpResult);
+    }
+
+    /**
+     * Get a list of all possible wallet apps
+     *
+     * @throws ApiExceptionInterface
+     */
+    public function getWalletApps(): GetWalletAppsResponse
+    {
+        $httpResult = $this->apiCaller->get(
+            Actions::GET_WALLET_APPS,
+            [
+                'locale' => $this->locale,
+            ]
+        );
+
+        return $this->responseFactory->createGetWalletAppsResponse($httpResult);
     }
 }

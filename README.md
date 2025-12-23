@@ -47,5 +47,6 @@ try {
 - CancelPayment
 - GetCurrencyList
 - RequestKyc
+- GetWalletApps
 
 For corresponding methods refer to `PaymentGatewayApiInterface` in `src/PaymentGatewayApiInterface.php`

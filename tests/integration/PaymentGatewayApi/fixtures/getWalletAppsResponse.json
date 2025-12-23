@@ -1,0 +1,14 @@
+[
+    {
+        "id": "27846ac7-9f56-4b28-a524-dc5d6fd29a01",
+        "name": "Metamask",
+        "image": "https://example-pgw.forumpay.com/pay/images/wallets/metamask.png",
+        "image_darkmode": "https://example-pgw.forumpay.com/pay/images/wallets/metamask_white.png"
+    },
+    {
+        "id": "f3a1b2c3-d4e5-6f7a-8b9c-0d1e2f3a4b5c",
+        "name": "Trust Wallet",
+        "image": "https://example-pgw.forumpay.com/pay/images/wallets/trustwallet.png",
+        "image_darkmode": "https://example-pgw.forumpay.com/pay/images/wallets/trustwallet_white.png"
+    }
+]

@@ -11,6 +11,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 
@@ -127,4 +128,11 @@ interface PaymentGatewayApiInterface
         string $email,
         ?string $user = null
     ): RequestKycResponse;
+
+    /**
+     * Get a list of all possible wallet apps
+     *
+     * @throws ApiExceptionInterface
+     */
+    public function getWalletApps(): GetWalletAppsResponse;
 }

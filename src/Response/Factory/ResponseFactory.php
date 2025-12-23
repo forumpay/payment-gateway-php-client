@@ -15,6 +15,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
@@ -135,6 +136,18 @@ class ResponseFactory
         return self::createResponse(
             RequestKycResponse::class,
             Actions::REQUEST_KYC,
+            $httpResult
+        );
+    }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    public function createGetWalletAppsResponse(HttpResult $httpResult): GetWalletAppsResponse
+    {
+        return self::createResponse(
+            GetWalletAppsResponse::class,
+            Actions::GET_WALLET_APPS,
             $httpResult
         );
     }

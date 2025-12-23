@@ -23,4 +23,6 @@ class Actions
     public const GET_CURRENCY_LIST = 'GetCurrencyList';
 
     public const REQUEST_KYC = 'RequestKyc';
+
+    public const GET_WALLET_APPS = 'GetWalletApps';
 }
