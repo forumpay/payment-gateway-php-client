@@ -73,6 +73,31 @@ class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewa
         self::assertEquals('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXltZW50X2lkIjoiMzU0N2FkZTYtY2FiOC00Y2U4LTllYzktYzRmZDcyODYzNjNjIiwic3ViIjoifGV2ZW50cy5zdGF0c190b2tlbiIsImV4cCI6MTY3NTc5ODYwN30.BeYR3hjkHT30ZSu420db9NErIBwyGMOYVowqMjRHIl4', $response->getStatsToken());
         self::assertEquals([], $response->getNotices());
         self::assertEquals('3547ade6-cab8-4ce8-9ec9-c4fd7286363c', $response->getPaymentId());
+        self::assertEquals('Test Product', $response->getItemName());
+        self::assertEquals('4.44', $response->getInvoiceSurchargeAmount());
+        self::assertEquals('226.44', $response->getInvoiceAmountWithSurcharge());
+        self::assertEquals('2.00', $response->getInvoiceSurchargePercent());
+    }
+
+    public function testItCallsStartPaymentWithoutSurcharge()
+    {
+        $fixtures = self::getFixturesJson('startPaymentResponseWithoutSurcharge');
+        $this->setMockedApiResponse($fixtures);
+
+        $paymentGatewayApi = self::getPaymentGatewayApiWithHttpClientMock(
+            'POST',
+            Actions::START_PAYMENT,
+            self::START_PAYMENT_CALL_PARAMETERS
+        );
+
+        $response = $paymentGatewayApi->startPayment(...array_values(self::START_PAYMENT_CALL_PARAMETERS));
+
+        self::assertInstanceOf(StartPaymentResponse::class, $response);
+
+        self::assertEquals('Test Product', $response->getItemName());
+        self::assertNull($response->getInvoiceSurchargeAmount());
+        self::assertNull($response->getInvoiceAmountWithSurcharge());
+        self::assertNull($response->getInvoiceSurchargePercent());
     }
 
     public function testItFailsGracefullyOnInvalidStartPaymentResponse()

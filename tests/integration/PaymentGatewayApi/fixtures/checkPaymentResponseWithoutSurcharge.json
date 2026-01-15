@@ -33,8 +33,5 @@
   "cancelled_time": "2022-11-10 08:48:48",
   "print_string": "<BR>Reference: web:3547ade6-cab8-4ce8-9ec9-c4fd7286363c<BR><DLINE><BR><CENTER>=== Cancelled ===<\/CENTER><BR><DLINE><BR><BR><CUT><LINE><BR>",
   "state": "cancelled",
-  "item_name": "Test Product",
-  "invoice_surcharge_amount": "4.44",
-  "invoice_amount_with_surcharge": "226.44",
-  "invoice_surcharge_percent": "2.00"
+  "item_name": "Test Product"
 }

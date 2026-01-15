@@ -63,6 +63,14 @@ class CheckPaymentResponse
 
     private string $state;
 
+    private ?string $itemName;
+
+    private ?string $invoiceSurchargeAmount;
+
+    private ?string $invoiceAmountWithSurcharge;
+
+    private ?string $invoiceSurchargePercent;
+
     public function __construct(
         ?string $referenceNo,
         string $inserted,
@@ -90,7 +98,11 @@ class CheckPaymentResponse
         bool $cancelled,
         ?string $cancelledTime,
         ?string $printString,
-        string $state
+        string $state,
+        ?string $itemName,
+        ?string $invoiceSurchargeAmount,
+        ?string $invoiceAmountWithSurcharge,
+        ?string $invoiceSurchargePercent
     ) {
         $this->referenceNo = $referenceNo;
         $this->inserted = $inserted;
@@ -119,6 +131,10 @@ class CheckPaymentResponse
         $this->cancelledTime = $cancelledTime;
         $this->printString = $printString;
         $this->state = $state;
+        $this->itemName = $itemName;
+        $this->invoiceSurchargeAmount = $invoiceSurchargeAmount;
+        $this->invoiceAmountWithSurcharge = $invoiceAmountWithSurcharge;
+        $this->invoiceSurchargePercent = $invoiceSurchargePercent;
     }
 
     public static function createFromHttpResult(HttpResult $httpResult): self
@@ -152,7 +168,11 @@ class CheckPaymentResponse
             $responseJson['cancelled'] ?? false,
             $responseJson['cancelled_time'] ?? null,
             $responseJson['print_string'],
-            $responseJson['state']
+            $responseJson['state'],
+            $responseJson['item_name'] ?? null,
+            $responseJson['invoice_surcharge_amount'] ?? null,
+            $responseJson['invoice_amount_with_surcharge'] ?? null,
+            $responseJson['invoice_surcharge_percent'] ?? null
         );
     }
 
@@ -291,6 +311,26 @@ class CheckPaymentResponse
         return $this->state;
     }
 
+    public function getItemName(): ?string
+    {
+        return $this->itemName;
+    }
+
+    public function getInvoiceSurchargeAmount(): ?string
+    {
+        return $this->invoiceSurchargeAmount;
+    }
+
+    public function getInvoiceAmountWithSurcharge(): ?string
+    {
+        return $this->invoiceAmountWithSurcharge;
+    }
+
+    public function getInvoiceSurchargePercent(): ?string
+    {
+        return $this->invoiceSurchargePercent;
+    }
+
     public function toArray(): array
     {
         return [
@@ -321,6 +361,10 @@ class CheckPaymentResponse
             'cancelled_time' => $this->cancelledTime,
             'print_string' => $this->printString,
             'state' => $this->state,
+            'item_name' => $this->itemName,
+            'invoice_surcharge_amount' => $this->invoiceSurchargeAmount,
+            'invoice_amount_with_surcharge' => $this->invoiceAmountWithSurcharge,
+            'invoice_surcharge_percent' => $this->invoiceSurchargePercent,
         ];
     }
 }

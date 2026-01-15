@@ -23,8 +23,5 @@
   "stats_token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXltZW50X2lkIjoiMzU0N2FkZTYtY2FiOC00Y2U4LTllYzktYzRmZDcyODYzNjNjIiwic3ViIjoifGV2ZW50cy5zdGF0c190b2tlbiIsImV4cCI6MTY3NTc5ODYwN30.BeYR3hjkHT30ZSu420db9NErIBwyGMOYVowqMjRHIl4",
   "notices": [],
   "payment_id": "3547ade6-cab8-4ce8-9ec9-c4fd7286363c",
-  "item_name": "Test Product",
-  "invoice_surcharge_amount": "4.44",
-  "invoice_amount_with_surcharge": "226.44",
-  "invoice_surcharge_percent": "2.00"
+  "item_name": "Test Product"
 }

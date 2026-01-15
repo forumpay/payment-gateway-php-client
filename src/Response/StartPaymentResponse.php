@@ -58,6 +58,14 @@ class StartPaymentResponse
 
     private ?array $beneficiaryVaspDetails;
 
+    private ?string $itemName;
+
+    private ?string $invoiceSurchargeAmount;
+
+    private ?string $invoiceAmountWithSurcharge;
+
+    private ?string $invoiceSurchargePercent;
+
     public function __construct(
         string $invoiceCurrency,
         ?string $invoiceAmount,
@@ -83,7 +91,11 @@ class StartPaymentResponse
         string $statsToken,
         array $notices,
         string $paymentId,
-        ?array $beneficiaryVaspDetails
+        ?array $beneficiaryVaspDetails,
+        ?string $itemName,
+        ?string $invoiceSurchargeAmount,
+        ?string $invoiceAmountWithSurcharge,
+        ?string $invoiceSurchargePercent
     ) {
         $this->invoiceCurrency = $invoiceCurrency;
         $this->invoiceAmount = $invoiceAmount;
@@ -110,6 +122,10 @@ class StartPaymentResponse
         $this->notices = $notices;
         $this->paymentId = $paymentId;
         $this->beneficiaryVaspDetails = $beneficiaryVaspDetails;
+        $this->itemName = $itemName;
+        $this->invoiceSurchargeAmount = $invoiceSurchargeAmount;
+        $this->invoiceAmountWithSurcharge = $invoiceAmountWithSurcharge;
+        $this->invoiceSurchargePercent = $invoiceSurchargePercent;
     }
 
     public static function createFromHttpResult(HttpResult $httpResult): self
@@ -142,6 +158,10 @@ class StartPaymentResponse
             $responseJson['notices'],
             $responseJson['payment_id'],
             $responseJson['beneficiary_vasp_details'] ?? null,
+            $responseJson['item_name'] ?? null,
+            $responseJson['invoice_surcharge_amount'] ?? null,
+            $responseJson['invoice_amount_with_surcharge'] ?? null,
+            $responseJson['invoice_surcharge_percent'] ?? null,
         );
     }
 
@@ -270,6 +290,26 @@ class StartPaymentResponse
         return $this->beneficiaryVaspDetails;
     }
 
+    public function getItemName(): ?string
+    {
+        return $this->itemName;
+    }
+
+    public function getInvoiceSurchargeAmount(): ?string
+    {
+        return $this->invoiceSurchargeAmount;
+    }
+
+    public function getInvoiceAmountWithSurcharge(): ?string
+    {
+        return $this->invoiceAmountWithSurcharge;
+    }
+
+    public function getInvoiceSurchargePercent(): ?string
+    {
+        return $this->invoiceSurchargePercent;
+    }
+
     public function toArray(): array
     {
         return [
@@ -298,6 +338,10 @@ class StartPaymentResponse
             'notices' => $this->notices,
             'payment_id' => $this->paymentId,
             'beneficiary_vasp_details' => $this->beneficiaryVaspDetails,
+            'item_name' => $this->itemName,
+            'invoice_surcharge_amount' => $this->invoiceSurchargeAmount,
+            'invoice_amount_with_surcharge' => $this->invoiceAmountWithSurcharge,
+            'invoice_surcharge_percent' => $this->invoiceSurchargePercent,
         ];
     }
 }

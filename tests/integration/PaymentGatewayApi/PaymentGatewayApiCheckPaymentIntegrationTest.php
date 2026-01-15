@@ -69,6 +69,32 @@ class PaymentGatewayApiCheckPaymentIntegrationTest extends AbstractPaymentGatewa
         self::assertEquals('https://example-pgw.forumpay.com/sandboxWallet.transfer?currency=BTC&address=btc-7382eb0b31a74b91bf1ebb099624f237', $response->getUnderpayment()->getQrAlt());
         self::assertEquals('https://example-api.forumpay.com/qr/?d=https%3A%2F%2Fexample-pgw.forumpay.com%2FsandboxWallet.transfer%3Fcurrency%3DBTC%26address%3Dbtc-7382eb0b31a74b91bf1ebb099624f237%26amount%3D0.0000100', $response->getUnderpayment()->getQrImg());
         self::assertEquals('https://example-api.forumpay.com/qr/?d=https%3A%2F%2Fexample-pgw.forumpay.com%2FsandboxWallet.transfer%3Fcurrency%3DBTC%26address%3Dbtc-7382eb0b31a74b91bf1ebb099624f237', $response->getUnderpayment()->getQrAltImg());
+
+        self::assertEquals('Test Product', $response->getItemName());
+        self::assertEquals('4.44', $response->getInvoiceSurchargeAmount());
+        self::assertEquals('226.44', $response->getInvoiceAmountWithSurcharge());
+        self::assertEquals('2.00', $response->getInvoiceSurchargePercent());
+    }
+
+    public function testItCallsCheckPaymentWithoutSurcharge()
+    {
+        $fixtures = self::getFixturesJson('checkPaymentResponseWithoutSurcharge');
+        $this->setMockedApiResponse($fixtures);
+
+        $paymentGatewayApi = self::getPaymentGatewayApiWithHttpClientMock(
+            'GET',
+            Actions::CHECK_PAYMENT,
+            self::CHECK_PAYMENT_CALL_PARAMETERS
+        );
+
+        $response = $paymentGatewayApi->checkPayment(...array_values(self::CHECK_PAYMENT_CALL_PARAMETERS));
+
+        self::assertInstanceOf(CheckPaymentResponse::class, $response);
+
+        self::assertEquals('Test Product', $response->getItemName());
+        self::assertNull($response->getInvoiceSurchargeAmount());
+        self::assertNull($response->getInvoiceAmountWithSurcharge());
+        self::assertNull($response->getInvoiceSurchargePercent());
     }
 
     public function testItFailsGracefullyOnInvalidCheckPaymentResponse()
