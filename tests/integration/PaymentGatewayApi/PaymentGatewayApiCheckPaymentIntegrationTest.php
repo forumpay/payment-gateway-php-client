@@ -40,6 +40,7 @@ class PaymentGatewayApiCheckPaymentIntegrationTest extends AbstractPaymentGatewa
         self::assertEquals('Sell', $response->getType());
         self::assertEquals('EUR', $response->getInvoiceCurrency());
         self::assertEquals('0.01333323', $response->getAmount());
+        self::assertNull($response->getOriginalAmount());
         self::assertEquals('1', $response->getMinConfirmations());
         self::assertEquals('1', $response->isAcceptZeroConfirmations());
         self::assertEquals('0', $response->isRequireKytForConfirmation());

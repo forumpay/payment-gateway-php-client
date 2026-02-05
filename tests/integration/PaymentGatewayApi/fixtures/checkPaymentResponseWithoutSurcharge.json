@@ -5,6 +5,7 @@
   "type": "Sell",
   "invoice_currency": "EUR",
   "amount": "0.01333323",
+  "original_amount": null,
   "min_confirmations": "1",
   "accept_zero_confirmations": "1",
   "require_kyt_for_confirmation": "0",
