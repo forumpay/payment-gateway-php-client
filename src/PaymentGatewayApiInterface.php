@@ -76,7 +76,9 @@ interface PaymentGatewayApiInterface
         ?string $webhookUrl = null,
         ?string $onSuccessRedirectUrl = null,
         ?string $onFailureRedirectUrl = null,
-        ?string $autoAcceptOverpaymentMax = null
+        ?string $autoAcceptOverpaymentMax = null,
+        ?array $payer = null,
+        ?string $networkProcessingFeePaidBy = null
     ): StartPaymentResponse;
 
     /**
