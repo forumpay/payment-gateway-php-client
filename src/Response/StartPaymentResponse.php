@@ -52,6 +52,8 @@ class StartPaymentResponse
 
     private string $statsToken;
 
+    private ?string $wcToken;
+
     private array $notices;
 
     private string $paymentId;
@@ -89,6 +91,7 @@ class StartPaymentResponse
         string $accessToken,
         string $accessUrl,
         string $statsToken,
+        ?string $wcToken,
         array $notices,
         string $paymentId,
         ?array $beneficiaryVaspDetails,
@@ -119,6 +122,7 @@ class StartPaymentResponse
         $this->accessToken = $accessToken;
         $this->accessUrl = $accessUrl;
         $this->statsToken = $statsToken;
+        $this->wcToken = $wcToken;
         $this->notices = $notices;
         $this->paymentId = $paymentId;
         $this->beneficiaryVaspDetails = $beneficiaryVaspDetails;
@@ -155,6 +159,7 @@ class StartPaymentResponse
             $responseJson['access_token'],
             $responseJson['access_url'],
             $responseJson['stats_token'],
+            $responseJson['wc_token'] ?? null,
             $responseJson['notices'],
             $responseJson['payment_id'],
             $responseJson['beneficiary_vasp_details'] ?? null,
@@ -275,6 +280,11 @@ class StartPaymentResponse
         return $this->statsToken;
     }
 
+    public function getWcToken(): ?string
+    {
+        return $this->wcToken;
+    }
+
     public function getNotices(): array
     {
         return $this->notices;
@@ -335,6 +345,7 @@ class StartPaymentResponse
             'access_token' => $this->accessToken,
             'access_url' => $this->accessUrl,
             'stats_token' => $this->statsToken,
+            'wc_token' => $this->wcToken,
             'notices' => $this->notices,
             'payment_id' => $this->paymentId,
             'beneficiary_vasp_details' => $this->beneficiaryVaspDetails,

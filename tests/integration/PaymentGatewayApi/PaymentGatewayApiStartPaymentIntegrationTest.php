@@ -71,6 +71,7 @@ class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewa
         self::assertEquals('fz7RCsx3Vl5VwijzFfVy1TssSiD8V9f2c7CAjKEKPzO7YvjfTHXFI5TT5lg22tDa', $response->getAccessToken());
         self::assertEquals('https://example-pgw.forumpay.com/pay?merchant_id=6a69b8ca-dc98-47d4-a33d-5edefee17f22&order_amount=222.00&order_currency=EUR&item_name=#checkPayment$web$3547ade6-cab8-4ce8-9ec9-c4fd7286363c$BTC$btc-32d7e90b1ff241ab81a36e22696c0047$6a69b8ca-dc98-47d4-a33d-5edefee17f22$fz7RCsx3Vl5VwijzFfVy1TssSiD8V9f2c7CAjKEKPzO7YvjfTHXFI5TT5lg22tDa$', $response->getAccessUrl());
         self::assertEquals('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXltZW50X2lkIjoiMzU0N2FkZTYtY2FiOC00Y2U4LTllYzktYzRmZDcyODYzNjNjIiwic3ViIjoifGV2ZW50cy5zdGF0c190b2tlbiIsImV4cCI6MTY3NTc5ODYwN30.BeYR3hjkHT30ZSu420db9NErIBwyGMOYVowqMjRHIl4', $response->getStatsToken());
+        self::assertEquals('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwYXltZW50X2lkIjoiMzU0N2FkZTYtY2FiOC00Y2U4LTllYzktYzRmZDcyODYzNjNjIiwic3ViIjoid2FsbGV0X2Nvbm5lY3QudG9rZW4iLCJleHAiOjE2NzU4MTIyMDd9.exampleWcTokenSignatureForTesting', $response->getWcToken());
         self::assertEquals([], $response->getNotices());
         self::assertEquals('3547ade6-cab8-4ce8-9ec9-c4fd7286363c', $response->getPaymentId());
         self::assertEquals('Test Product', $response->getItemName());
@@ -95,6 +96,7 @@ class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewa
         self::assertInstanceOf(StartPaymentResponse::class, $response);
 
         self::assertEquals('Test Product', $response->getItemName());
+        self::assertNull($response->getWcToken());
         self::assertNull($response->getInvoiceSurchargeAmount());
         self::assertNull($response->getInvoiceAmountWithSurcharge());
         self::assertNull($response->getInvoiceSurchargePercent());
