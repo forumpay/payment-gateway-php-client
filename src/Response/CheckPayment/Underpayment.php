@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Response\CheckPayment;
 
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayload;
+
 class Underpayment
 {
     private string $address;
@@ -34,15 +36,17 @@ class Underpayment
         $this->qrAltImg = $qrAltImg;
     }
 
-    public static function createFromArray(array $underpayment): self
+    public static function createFromArray(array $underpayment, string $path = '$'): self
     {
+        $payload = ResponsePayload::fromArray($underpayment, $path);
+
         return new self(
-            $underpayment['address'],
-            $underpayment['missing_amount'],
-            $underpayment['qr'],
-            $underpayment['qr_alt'],
-            $underpayment['qr_img'],
-            $underpayment['qr_alt_img']
+            $payload->requiredString('address'),
+            $payload->requiredString('missing_amount'),
+            $payload->requiredString('qr'),
+            $payload->requiredString('qr_alt'),
+            $payload->requiredString('qr_img'),
+            $payload->requiredString('qr_alt_img')
         );
     }
 

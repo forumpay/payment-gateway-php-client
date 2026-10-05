@@ -29,7 +29,7 @@ abstract class AbstractApiException extends Exception implements ApiExceptionInt
         string $message,
         ?string $errorCode = null,
         ?array $additionalData = null,
-        Throwable $previous = null
+        ?Throwable $previous = null
     ) {
         $this->httpMethod = $httpMethod;
         $this->uri = $uri;

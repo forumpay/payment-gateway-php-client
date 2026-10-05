@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Response\GetTransactions;
 
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayload;
+
 class CustomerDetailsAddress
 {
     private string $firstName;
@@ -46,18 +48,20 @@ class CustomerDetailsAddress
         $this->nationality = $nationality;
     }
 
-    public static function createFromArray(array $contact): self
+    public static function createFromArray(array $contact, string $path = '$'): self
     {
+        $payload = ResponsePayload::fromArray($contact, $path);
+
         return new self(
-            $contact['first_name'],
-            $contact['last_name'],
-            $contact['company'],
-            $contact['address_line_1'],
-            $contact['address_line_2'],
-            $contact['postal_code'],
-            $contact['city'],
-            $contact['country'],
-            $contact['nationality']
+            $payload->requiredString('first_name'),
+            $payload->requiredString('last_name'),
+            $payload->optionalString('company'),
+            $payload->requiredString('address_line_1'),
+            $payload->optionalString('address_line_2'),
+            $payload->requiredString('postal_code'),
+            $payload->requiredString('city'),
+            $payload->requiredString('country'),
+            $payload->optionalString('nationality')
         );
     }
 

@@ -62,21 +62,21 @@ class GetRateResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
-        $responseJson = $httpResult->getResponse();
+        $payload = ResponsePayload::fromHttpResult($httpResult);
 
         return new self(
-            $responseJson['invoice_currency'],
-            $responseJson['invoice_amount'],
-            $responseJson['currency'],
-            $responseJson['rate'],
-            $responseJson['amount_exchange'],
-            $responseJson['network_processing_fee'],
-            $responseJson['amount'],
-            $responseJson['wait_time'],
-            $responseJson['sid'],
-            $responseJson['fast_transaction_fee'],
-            $responseJson['fast_transaction_fee_currency'],
-            $responseJson['payment_id']
+            $payload->requiredString('invoice_currency'),
+            $payload->optionalString('invoice_amount'),
+            $payload->requiredString('currency'),
+            $payload->optionalString('rate'),
+            $payload->optionalString('amount_exchange'),
+            $payload->requiredString('network_processing_fee'),
+            $payload->optionalString('amount'),
+            $payload->requiredString('wait_time'),
+            $payload->optionalString('sid'),
+            $payload->optionalString('fast_transaction_fee'),
+            $payload->optionalString('fast_transaction_fee_currency'),
+            $payload->requiredString('payment_id')
         );
     }
 

@@ -16,8 +16,10 @@ use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\MeResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 use Psr\Log\LoggerInterface;
 
@@ -40,6 +42,18 @@ class ResponseFactory
         return self::createResponse(
             PingResponse::class,
             Actions::PING,
+            $httpResult
+        );
+    }
+
+    /**
+     * @throws InvalidResponseException
+     */
+    public function createMeResponse(HttpResult $httpResult): MeResponse
+    {
+        return self::createResponse(
+            MeResponse::class,
+            Actions::ME,
             $httpResult
         );
     }
@@ -162,12 +176,20 @@ class ResponseFactory
     ) {
         try {
             return $responseClass::createFromHttpResult($httpResult);
-        } catch (Error $exception) {
+        } catch (ResponsePayloadException | Error $exception) {
             $this->logError('Calling "%s" endpoint failed due to invalid response', [
                 'error' => $exception->getMessage(),
                 'response' => $httpResult->getResponse(),
             ]);
-            throw new InvalidResponseException($httpResult->getHttpMethod(), $httpResult->getUri(), $httpResult->getCallParameters(), $httpResult->getCfRayId(), $action, $httpResult->getResponse(), $exception);
+            throw new InvalidResponseException(
+                $httpResult->getHttpMethod(),
+                $httpResult->getUri(),
+                $httpResult->getCallParameters(),
+                $httpResult->getCfRayId(),
+                $action,
+                $httpResult->getResponse() ?? [],
+                $exception
+            );
         }
     }
 }

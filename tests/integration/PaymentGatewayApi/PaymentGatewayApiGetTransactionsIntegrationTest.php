@@ -8,7 +8,7 @@ use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactions\TransactionInvoice;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
-use TypeError;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 
 class PaymentGatewayApiGetTransactionsIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -115,9 +115,44 @@ class PaymentGatewayApiGetTransactionsIntegrationTest extends AbstractPaymentGat
         try {
             $paymentGatewayApi->getTransactions(...array_values(self::GET_TRANSACTIONS_CALL_PARAMETERS));
         } catch (InvalidResponseException $e) {
-            self::assertEquals(TypeError::class, get_class($e->getPrevious()));
+            self::assertEquals(ResponsePayloadException::class, get_class($e->getPrevious()));
+            self::assertEquals('$.invoices[0]', $e->getPrevious()->getFieldPath());
             return;
         }
         self::fail(sprintf('Should\'ve failed with %s exception', InvalidResponseException::class));
+    }
+
+    public function testItHandlesMissingInvoicesAsEmptyArray()
+    {
+        $this->setMockedApiResponse([]);
+
+        $paymentGatewayApi = self::getPaymentGatewayApiWithHttpClientMock(
+            'GET',
+            Actions::GET_TRANSACTIONS,
+            self::GET_TRANSACTIONS_CALL_PARAMETERS
+        );
+
+        $response = $paymentGatewayApi->getTransactions(...array_values(self::GET_TRANSACTIONS_CALL_PARAMETERS));
+
+        self::assertInstanceOf(GetTransactionsResponse::class, $response);
+        self::assertIsArray($response->getInvoices());
+        self::assertCount(0, $response->getInvoices());
+    }
+
+    public function testItHandlesNullResponseAsEmptyArray()
+    {
+        $this->setMockedApiResponse(null);
+
+        $paymentGatewayApi = self::getPaymentGatewayApiWithHttpClientMock(
+            'GET',
+            Actions::GET_TRANSACTIONS,
+            self::GET_TRANSACTIONS_CALL_PARAMETERS
+        );
+
+        $response = $paymentGatewayApi->getTransactions(...array_values(self::GET_TRANSACTIONS_CALL_PARAMETERS));
+
+        self::assertInstanceOf(GetTransactionsResponse::class, $response);
+        self::assertIsArray($response->getInvoices());
+        self::assertCount(0, $response->getInvoices());
     }
 }

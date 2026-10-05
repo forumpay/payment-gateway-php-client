@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace ForumPay\PaymentGateway\PHPClient\Response\GetTransactions;
 
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactions\CustomerDetails;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayload;
 
 class TransactionInvoice
 {
@@ -128,38 +129,42 @@ class TransactionInvoice
         $this->customerDetails = $customerDetails;
     }
 
-    public static function createFromArray(array $transaction): self
+    public static function createFromArray(array $transaction, string $path = '$'): self
     {
+        $payload = ResponsePayload::fromArray($transaction, $path);
+        $customerDetails = $payload->optionalObject('customer_details');
+        $refundAmountOpened = $payload->optional('refund_amount_opened');
+
         return new self(
-            $transaction['state'],
-            $transaction['status'],
-            $transaction['status_loc'],
-            $transaction['pos_id'],
-            $transaction['invoice_currency'],
-            $transaction['invoice_amount'],
-            $transaction['currency'],
-            $transaction['amount'],
-            $transaction['amount_exchange'],
-            $transaction['network_processing_fee'],
-            $transaction['address'],
-            $transaction['type'],
-            $transaction['type_loc'],
-            $transaction['payment'],
-            $transaction['refund'],
-            $transaction['refund_amount_opened'] !== null ? (string) $transaction['refund_amount_opened'] : null,
-            $transaction['refund_status'],
-            $transaction['refund_status_loc'],
-            $transaction['invoice_date'],
-            $transaction['inserted'],
-            $transaction['confirmed'],
-            $transaction['cancelled'],
-            $transaction['double_spending_alert'],
-            $transaction['accept_zero_confirmations'],
-            $transaction['item_name'],
-            $transaction['access_token'],
-            $transaction['sid'],
-            $transaction['payment_id'],
-            isset($transaction['customer_details']) ? CustomerDetails::createFromArray($transaction['customer_details']) : null,
+            $payload->requiredString('state'),
+            $payload->requiredString('status'),
+            $payload->requiredString('status_loc'),
+            $payload->requiredString('pos_id'),
+            $payload->requiredString('invoice_currency'),
+            $payload->optionalString('invoice_amount'),
+            $payload->requiredString('currency'),
+            $payload->optionalString('amount'),
+            $payload->optionalString('amount_exchange'),
+            $payload->requiredString('network_processing_fee'),
+            $payload->requiredString('address'),
+            $payload->requiredString('type'),
+            $payload->requiredString('type_loc'),
+            $payload->optionalString('payment'),
+            $payload->optionalString('refund'),
+            $refundAmountOpened !== null ? (string) $refundAmountOpened : null,
+            $payload->optionalString('refund_status'),
+            $payload->optionalString('refund_status_loc'),
+            $payload->optionalString('invoice_date'),
+            $payload->requiredString('inserted'),
+            $payload->optionalString('confirmed'),
+            $payload->optionalString('cancelled'),
+            $payload->optionalString('double_spending_alert'),
+            $payload->requiredBool('accept_zero_confirmations'),
+            $payload->optionalString('item_name'),
+            $payload->optionalString('access_token'),
+            $payload->optionalString('sid'),
+            $payload->optionalString('payment_id'),
+            $customerDetails !== null ? CustomerDetails::createFromArray($customerDetails->getData(), $customerDetails->getPath()) : null
         );
     }
 

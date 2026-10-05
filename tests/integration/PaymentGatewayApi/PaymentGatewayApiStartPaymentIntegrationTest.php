@@ -6,8 +6,8 @@ namespace ForumPay\PaymentGateway\PHPClient\Test\integration\PaymentGatewayApi;
 
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
-use TypeError;
 
 class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -115,7 +115,8 @@ class PaymentGatewayApiStartPaymentIntegrationTest extends AbstractPaymentGatewa
         try {
             $paymentGatewayApi->startPayment(...array_values(self::START_PAYMENT_CALL_PARAMETERS));
         } catch (InvalidResponseException $e) {
-            self::assertEquals(TypeError::class, get_class($e->getPrevious()));
+            self::assertEquals(ResponsePayloadException::class, get_class($e->getPrevious()));
+            self::assertEquals('$.invoice_currency', $e->getPrevious()->getFieldPath());
             return;
         }
         self::fail(sprintf('Should\'ve failed with %s exception', InvalidResponseException::class));

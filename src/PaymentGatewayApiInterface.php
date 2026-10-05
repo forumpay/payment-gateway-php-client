@@ -12,11 +12,17 @@ use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\MeResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
 
 interface PaymentGatewayApiInterface
 {
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function getMe(): MeResponse;
+
     /**
      * @throws ApiExceptionInterface
      */

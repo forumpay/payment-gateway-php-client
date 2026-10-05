@@ -19,10 +19,14 @@ class GetWalletAppsResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
+        $payload = ResponsePayload::fromHttpResult($httpResult);
+
         return new self(
             array_map(
-                fn (array $walletApp) => WalletApp::createFromArray($walletApp),
-                $httpResult->getResponse()
+                static function (ResponsePayload $walletApp): WalletApp {
+                    return WalletApp::createFromArray($walletApp->getData(), $walletApp->getPath());
+                },
+                $payload->asList()
             )
         );
     }

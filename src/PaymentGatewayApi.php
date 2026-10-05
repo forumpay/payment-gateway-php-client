@@ -17,6 +17,7 @@ use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactionsResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\GetWalletAppsResponse;
+use ForumPay\PaymentGateway\PHPClient\Response\MeResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\PingResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\RequestKycResponse;
 use ForumPay\PaymentGateway\PHPClient\Response\StartPaymentResponse;
@@ -24,7 +25,7 @@ use Psr\Log\LoggerInterface;
 
 class PaymentGatewayApi implements PaymentGatewayApiInterface
 {
-    public const VERSION = '1.7.0';
+    public const VERSION = '1.8.0';
 
     private const DEFAULT_LOCALE = 'en-GB';
 
@@ -72,6 +73,21 @@ class PaymentGatewayApi implements PaymentGatewayApiInterface
         );
 
         return $this->responseFactory->createPingResponse($httpResult);
+    }
+
+    /**
+     * @throws ApiExceptionInterface
+     */
+    public function getMe(): MeResponse
+    {
+        $httpResult = $this->apiCaller->get(
+            Actions::ME,
+            [
+                'locale' => $this->locale,
+            ]
+        );
+
+        return $this->responseFactory->createMeResponse($httpResult);
     }
 
     /**

@@ -22,11 +22,11 @@ class CancelPaymentResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
-        $responseJson = $httpResult->getResponse();
+        $payload = ResponsePayload::fromHttpResult($httpResult);
 
         return new self(
-            $responseJson['cancelled'],
-            $responseJson['status']
+            $payload->requiredBool('cancelled'),
+            $payload->requiredString('status')
         );
     }
 

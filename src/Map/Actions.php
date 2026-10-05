@@ -8,6 +8,8 @@ class Actions
 {
     public const PING = 'Ping';
 
+    public const ME = 'Me';
+
     public const GET_RATE = 'GetRate';
 
     public const GET_RATES = 'GetRates';

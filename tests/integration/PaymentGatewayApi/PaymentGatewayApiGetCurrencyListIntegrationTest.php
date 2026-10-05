@@ -8,7 +8,7 @@ use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyList\Currency;
 use ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyListResponse;
-use TypeError;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 
 class PaymentGatewayApiGetCurrencyListIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -87,7 +87,8 @@ class PaymentGatewayApiGetCurrencyListIntegrationTest extends AbstractPaymentGat
         try {
             $paymentGatewayApi->getCurrencyList(...array_values(self::GET_CURRENCY_CALL_PARAMETERS));
         } catch (InvalidResponseException $e) {
-            self::assertEquals(TypeError::class, get_class($e->getPrevious()));
+            self::assertEquals(ResponsePayloadException::class, get_class($e->getPrevious()));
+            self::assertEquals('$[0].currency', $e->getPrevious()->getFieldPath());
             return;
         }
         self::fail(sprintf('Should\'ve failed with %s exception', InvalidResponseException::class));

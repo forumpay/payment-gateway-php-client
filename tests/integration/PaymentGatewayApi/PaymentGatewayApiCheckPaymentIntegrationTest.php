@@ -8,7 +8,7 @@ use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
 use ForumPay\PaymentGateway\PHPClient\Response\CheckPayment\Underpayment;
 use ForumPay\PaymentGateway\PHPClient\Response\CheckPaymentResponse;
-use TypeError;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 
 class PaymentGatewayApiCheckPaymentIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -111,7 +111,8 @@ class PaymentGatewayApiCheckPaymentIntegrationTest extends AbstractPaymentGatewa
         try {
             $paymentGatewayApi->checkPayment(...array_values(self::CHECK_PAYMENT_CALL_PARAMETERS));
         } catch (InvalidResponseException $e) {
-            self::assertEquals(TypeError::class, get_class($e->getPrevious()));
+            self::assertEquals(ResponsePayloadException::class, get_class($e->getPrevious()));
+            self::assertEquals('$.inserted', $e->getPrevious()->getFieldPath());
             return;
         }
         self::fail(sprintf('Should\'ve failed with %s exception', InvalidResponseException::class));

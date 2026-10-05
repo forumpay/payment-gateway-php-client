@@ -19,10 +19,14 @@ class GetCurrencyListResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
+        $payload = ResponsePayload::fromHttpResult($httpResult);
+
         return new self(
             array_map(
-                fn (array $currency) => Currency::createFromArray($currency),
-                $httpResult->getResponse()
+                static function (ResponsePayload $currency): Currency {
+                    return Currency::createFromArray($currency->getData(), $currency->getPath());
+                },
+                $payload->asList()
             )
         );
     }

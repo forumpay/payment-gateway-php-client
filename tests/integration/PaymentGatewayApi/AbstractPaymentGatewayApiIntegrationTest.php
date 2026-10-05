@@ -24,7 +24,7 @@ abstract class AbstractPaymentGatewayApiIntegrationTest extends TestCase
 
     private const MOCK_LOCALE = 'en-GB';
 
-    private array $mockedApiResponse;
+    private ?array $mockedApiResponse;
 
     protected static function getFixturesJson(string $fixturesName): array
     {
@@ -76,7 +76,7 @@ abstract class AbstractPaymentGatewayApiIntegrationTest extends TestCase
         return $apiCallerMock;
     }
 
-    public function setMockedApiResponse(array $mockedApiResponse): void
+    public function setMockedApiResponse(?array $mockedApiResponse): void
     {
         $this->mockedApiResponse = $mockedApiResponse;
     }

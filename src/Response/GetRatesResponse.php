@@ -34,14 +34,14 @@ class GetRatesResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
-        $responseJson = $httpResult->getResponse();
+        $payload = ResponsePayload::fromHttpResult($httpResult);
 
         return new self(
-            $responseJson['payment_id'],
-            $responseJson['invoice_amount'],
-            $responseJson['invoice_currency'],
-            $responseJson['sid'] ?? null,
-            $responseJson['currencies'] ?? []
+            $payload->requiredString('payment_id'),
+            $payload->requiredString('invoice_amount'),
+            $payload->requiredString('invoice_currency'),
+            $payload->optionalString('sid'),
+            $payload->optionalArray('currencies', [])
         );
     }
 

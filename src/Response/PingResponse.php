@@ -20,15 +20,15 @@ class PingResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
-        $responseJson = $httpResult->getResponse();
-
-        if (! self::isResponseValid($responseJson)) {
-            throw new \RuntimeException('Invalid Ping response');
+        $payload = ResponsePayload::fromHttpResult($httpResult);
+        $result = $payload->requiredString('result');
+        if ($result !== 'pong') {
+            throw new ResponsePayloadException('Invalid Ping response', '$.result');
         }
 
         return new self(
-            $responseJson['result'],
-            $responseJson['webhook_response'] ?? []
+            $result,
+            $payload->optionalArray('webhook_response', [])
         );
     }
 
@@ -48,10 +48,5 @@ class PingResponse
             'result' => $this->result,
             'webhook_response' => $this->webhookResult,
         ];
-    }
-
-    private static function isResponseValid(?array $response): bool
-    {
-        return $response && isset($response['result']) && $response['result'] === 'pong';
     }
 }

@@ -6,7 +6,6 @@ namespace ForumPay\PaymentGateway\PHPClient\Response;
 
 use ForumPay\PaymentGateway\PHPClient\Http\HttpResult;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactions\TransactionInvoice;
-use RuntimeException;
 
 class GetTransactionsResponse
 {
@@ -20,21 +19,21 @@ class GetTransactionsResponse
 
     public static function createFromHttpResult(HttpResult $httpResult): self
     {
-        if (self::isResponseValid($httpResult->getResponse())) {
-            return new self(
-                array_map(
-                    fn (array $invoice) => TransactionInvoice::createFromArray($invoice),
-                    $httpResult->getResponse()['invoices'] ?? []
-                )
-            );
-        } else {
-            throw new RuntimeException(sprintf('Invalid GetTransactions response: "%s"', json_encode($httpResult->getResponse(), JSON_THROW_ON_ERROR)));
+        // Gateway returns null when no payments were found (backwards compatibility).
+        if ($httpResult->getResponse() === null) {
+            return new self([]);
         }
-    }
 
-    private static function isResponseValid(?array $response): bool
-    {
-        return $response === null || isset($response['invoices']);
+        $payload = ResponsePayload::fromHttpResult($httpResult);
+
+        return new self(
+            array_map(
+                static function (ResponsePayload $invoice): TransactionInvoice {
+                    return TransactionInvoice::createFromArray($invoice->getData(), $invoice->getPath());
+                },
+                $payload->optionalList('invoices')
+            )
+        );
     }
 
     public function getInvoices(): array

@@ -1,0 +1,12 @@
+{
+    "api": {
+        "permissions": [
+            "can_sell",
+            "can_buy",
+            "can_refund"
+        ]
+    },
+    "account": {
+        "id": "8b6231f0-d9ff-4ee3-acd5-ccd6a25ead44"
+    }
+}

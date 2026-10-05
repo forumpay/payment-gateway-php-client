@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Response\GetWalletApps;
 
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayload;
+
 class WalletApp
 {
     private string $id;
@@ -26,13 +28,15 @@ class WalletApp
         $this->imageDarkmode = $imageDarkmode;
     }
 
-    public static function createFromArray(array $walletApp): self
+    public static function createFromArray(array $walletApp, string $path = '$'): self
     {
+        $payload = ResponsePayload::fromArray($walletApp, $path);
+
         return new self(
-            $walletApp['id'],
-            $walletApp['name'],
-            $walletApp['image'] ?? null,
-            $walletApp['image_darkmode'] ?? null
+            $payload->requiredString('id'),
+            $payload->requiredString('name'),
+            $payload->optionalString('image'),
+            $payload->optionalString('image_darkmode')
         );
     }
 

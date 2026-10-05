@@ -4,10 +4,8 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Test\integration\PaymentGatewayApi;
 
-use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRatesResponse;
-use TypeError;
 
 class PaymentGatewayApiGetRatesIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -133,5 +131,24 @@ class PaymentGatewayApiGetRatesIntegrationTest extends AbstractPaymentGatewayApi
         self::assertEquals('a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d', $array['sid']);
         self::assertIsArray($array['currencies']);
         self::assertCount(3, $array['currencies']);
+    }
+
+    public function testItHandlesMissingCurrenciesAsEmptyArray()
+    {
+        $fixtures = self::getFixturesJson('getRatesResponse');
+        unset($fixtures['currencies']);
+        $this->setMockedApiResponse($fixtures);
+
+        $paymentGatewayApi = self::getPaymentGatewayApiWithHttpClientMock(
+            'GET',
+            Actions::GET_RATES,
+            self::GET_RATES_CALL_PARAMETERS
+        );
+
+        $response = $paymentGatewayApi->getRates(...array_values(self::GET_RATES_CALL_PARAMETERS));
+
+        self::assertInstanceOf(GetRatesResponse::class, $response);
+        self::assertIsArray($response->getCurrencies());
+        self::assertCount(0, $response->getCurrencies());
     }
 }

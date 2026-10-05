@@ -2,6 +2,12 @@
 
 PHP Client for interacting with Payment Gateway Webhost API
 
+# Requirements
+
+- PHP >= 8.0 with `ext-curl` and `ext-json`
+
+The client does not restrict you to a specific PHP version. It is tested on PHP 8.1 and 8.5, and works on any version up to 8.5. We recommend using the latest PHP 8.5 release.
+
 # Install
 
 Run `composer require forumpay/payment-gateway-php-client`
@@ -39,6 +45,7 @@ try {
 # Available endpoints
 
 - Ping
+- Me
 - GetRate
 - GetRates
 - StartPayment

@@ -7,7 +7,7 @@ namespace ForumPay\PaymentGateway\PHPClient\Test\integration\PaymentGatewayApi;
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
 use ForumPay\PaymentGateway\PHPClient\Response\GetRateResponse;
-use TypeError;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 
 class PaymentGatewayApiGetRateIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -64,9 +64,27 @@ class PaymentGatewayApiGetRateIntegrationTest extends AbstractPaymentGatewayApiI
         try {
             $paymentGatewayApi->getRate(...array_values(self::GET_RATE_CALL_PARAMETERS));
         } catch (InvalidResponseException $e) {
-            self::assertEquals(TypeError::class, get_class($e->getPrevious()));
+            self::assertEquals(ResponsePayloadException::class, get_class($e->getPrevious()));
+            self::assertEquals('$.invoice_currency', $e->getPrevious()->getFieldPath());
             return;
         }
         self::fail(sprintf('Should\'ve failed with %s exception', InvalidResponseException::class));
+    }
+
+    public function testItAcceptsNullForRequiredNullableGetRateFields()
+    {
+        $fixtures = self::getFixturesJson('getRateResponse');
+        $fixtures['invoice_amount'] = null;
+        $this->setMockedApiResponse($fixtures);
+
+        $paymentGatewayApi = self::getPaymentGatewayApiWithHttpClientMock(
+            'GET',
+            Actions::GET_RATE,
+            self::GET_RATE_CALL_PARAMETERS
+        );
+
+        $response = $paymentGatewayApi->getRate(...array_values(self::GET_RATE_CALL_PARAMETERS));
+
+        self::assertNull($response->getInvoiceAmount());
     }
 }

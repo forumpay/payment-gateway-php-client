@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Http;
 
+use CurlHandle;
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\ApiErrorException;
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidApiResponseException;
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseJsonException;
@@ -24,22 +25,17 @@ class HttpClient implements HttpClientInterface
         'Connection' => 'keep-alive',
     ];
 
-    private string $userAgentApplicationIdentifier;
+    private ?string $userAgentApplicationIdentifier;
 
-    /** @var resource */
+    /** @var CurlHandle */
     private $curl;
 
     private ?LoggerInterface $logger;
 
-    public function __construct(string $userAgentApplicationIdentifier = null)
+    public function __construct(?string $userAgentApplicationIdentifier = null)
     {
         $this->userAgentApplicationIdentifier = $userAgentApplicationIdentifier;
         $this->curl = curl_init();
-    }
-
-    public function __destruct()
-    {
-        curl_close($this->curl);
     }
 
     /**

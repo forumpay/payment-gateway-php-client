@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace ForumPay\PaymentGateway\PHPClient\Response\GetCurrencyList;
 
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayload;
+
 class Currency
 {
     private string $currency;
@@ -78,26 +80,28 @@ class Currency
         $this->buyNetworkProcessingFee = $buyNetworkProcessingFee;
     }
 
-    public static function createFromArray(array $currency): self
+    public static function createFromArray(array $currency, string $path = '$'): self
     {
+        $payload = ResponsePayload::fromArray($currency, $path);
+
         return new self(
-            $currency['currency'],
-            $currency['description'],
-            $currency['status'],
-            (int) $currency['zero_confirmations_enabled'],
-            $currency['currency_fiat'],
-            $currency['icon_url'],
-            $currency['rate'],
-            $currency['sell_status'],
-            $currency['sell_rate'],
-            $currency['buy_status'],
-            $currency['buy_rate'],
-            $currency['sell_min_invoice_amount'],
-            $currency['sell_max_invoice_amount'],
-            $currency['sell_network_processing_fee'],
-            $currency['buy_min_invoice_amount'],
-            $currency['buy_max_invoice_amount'],
-            $currency['buy_network_processing_fee'],
+            $payload->requiredString('currency'),
+            $payload->requiredString('description'),
+            $payload->requiredString('status'),
+            $payload->requiredInt('zero_confirmations_enabled'),
+            $payload->requiredString('currency_fiat'),
+            $payload->requiredString('icon_url'),
+            $payload->optionalString('rate'),
+            $payload->requiredString('sell_status'),
+            $payload->optionalString('sell_rate'),
+            $payload->requiredString('buy_status'),
+            $payload->optionalString('buy_rate'),
+            $payload->optionalString('sell_min_invoice_amount'),
+            $payload->optionalString('sell_max_invoice_amount'),
+            $payload->optionalString('sell_network_processing_fee'),
+            $payload->optionalString('buy_min_invoice_amount'),
+            $payload->optionalString('buy_max_invoice_amount'),
+            $payload->optionalString('buy_network_processing_fee')
         );
     }
 

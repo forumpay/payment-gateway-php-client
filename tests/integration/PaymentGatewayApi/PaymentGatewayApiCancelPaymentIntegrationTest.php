@@ -7,7 +7,7 @@ namespace ForumPay\PaymentGateway\PHPClient\Test\integration\PaymentGatewayApi;
 use ForumPay\PaymentGateway\PHPClient\Http\Exception\InvalidResponseException;
 use ForumPay\PaymentGateway\PHPClient\Map\Actions;
 use ForumPay\PaymentGateway\PHPClient\Response\CancelPaymentResponse;
-use TypeError;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayloadException;
 
 class PaymentGatewayApiCancelPaymentIntegrationTest extends AbstractPaymentGatewayApiIntegrationTest
 {
@@ -52,7 +52,8 @@ class PaymentGatewayApiCancelPaymentIntegrationTest extends AbstractPaymentGatew
         try {
             $paymentGatewayApi->cancelPayment(...array_values(self::CANCEL_PAYMENT_CALL_PARAMETERS));
         } catch (InvalidResponseException $e) {
-            self::assertEquals(TypeError::class, get_class($e->getPrevious()));
+            self::assertEquals(ResponsePayloadException::class, get_class($e->getPrevious()));
+            self::assertEquals('$.cancelled', $e->getPrevious()->getFieldPath());
             return;
         }
         self::fail(sprintf('Should\'ve failed with %s exception', InvalidResponseException::class));

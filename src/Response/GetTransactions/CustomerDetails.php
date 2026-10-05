@@ -6,6 +6,7 @@ namespace ForumPay\PaymentGateway\PHPClient\Response\GetTransactions;
 
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactions\CustomerDetailsAddress;
 use ForumPay\PaymentGateway\PHPClient\Response\GetTransactions\CustomerDetailsContact;
+use ForumPay\PaymentGateway\PHPClient\Response\ResponsePayload;
 
 class CustomerDetails
 {
@@ -25,12 +26,17 @@ class CustomerDetails
         $this->shippingAddress = $shippingAddress;
     }
 
-    public static function createFromArray(array $customerDetails): self
+    public static function createFromArray(array $customerDetails, string $path = '$'): self
     {
+        $payload = ResponsePayload::fromArray($customerDetails, $path);
+        $billingAddress = $payload->requiredObject('billing_address');
+        $contact = $payload->requiredObject('contact');
+        $shippingAddress = $payload->optionalObject('shipping_address');
+
         return new self(
-            CustomerDetailsAddress::createFromArray($customerDetails['billing_address']),
-            CustomerDetailsContact::createFromArray($customerDetails['contact']),
-            isset($customerDetails['shipping_address']) ? CustomerDetailsAddress::createFromArray($customerDetails['shipping_address']) : null
+            CustomerDetailsAddress::createFromArray($billingAddress->getData(), $billingAddress->getPath()),
+            CustomerDetailsContact::createFromArray($contact->getData(), $contact->getPath()),
+            $shippingAddress !== null ? CustomerDetailsAddress::createFromArray($shippingAddress->getData(), $shippingAddress->getPath()) : null
         );
     }
 
